@@ -37,7 +37,9 @@ class Author:
 
     def __str__(self):
         middle_names_str = " ".join(self.middle_names) if self.middle_names else ""
-        return f"{self.title} {self.prefix} {self.first_name} {middle_names_str} {self.last_name} {self.suffix}"
-
-# Prof. Robert D. M. Accola (auth.)
-# Prof. Dr. Heinz Zemanek (auth.), Andrei P. Ershov, Donald E. Knuth (eds.)
+        return (f"{self.title + ' ' if self.title else ''}"
+                f"{self.prefix + ' ' if self.prefix else ''}"
+                f"{self.first_name + ' ' if self.first_name else ''}"
+                f"{middle_names_str}"
+                f"{self.last_name + ' ' if self.last_name else ''}"
+                f"{self.suffix + ' ' if self.suffix else ''}")
