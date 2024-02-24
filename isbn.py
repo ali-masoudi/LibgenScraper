@@ -54,3 +54,6 @@ class ISBN:
         calculated_check_digit = (10 - (total % 10)) % 10
 
         return int(check_digit) == calculated_check_digit
+
+    def __str__(self):
+        return f"{self.isbn + ' ' if self.isbn else ''}"

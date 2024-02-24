@@ -7,4 +7,4 @@ class Language:
         self.name = name
 
     def __str__(self):
-        return f"Language ID: {self.language_id}, Name: {self.name}"
+        return f"{self.name + ' ' if self.name else ''}"
