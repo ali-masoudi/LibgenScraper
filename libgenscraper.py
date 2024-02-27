@@ -164,7 +164,7 @@ class LibgenScraper:
                     b.color = value
                 case 'Clean':
                     b.clean = value
-        b.image_url = urljoin(self.base_url , document.find('img')['src'])
+        b.image_url = urljoin(self.base_url, document.find('img')['src'])
         b.file_url = self.get_book_download_url(document.find('td', {'rowspan': 22, 'width': 240}).a['href'])
         print(b)
 
