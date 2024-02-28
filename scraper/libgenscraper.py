@@ -5,11 +5,6 @@ from urllib.parse import quote, urljoin
 import requests
 from bs4 import BeautifulSoup
 
-from author import Author
-from book import Book
-from isbn import ISBN
-from language import Language
-
 BASE_URL = 'https://libgen.is/'
 
 
@@ -48,30 +43,30 @@ class LibgenScraper:
                     main_table.find_all('a', href=lambda href: href and "book/index.php?md5=" in href)]
         return []
 
-    def create_authors(self, value: str):
-        authors = []
-        for author in value.split(","):
-            authors.append(Author(author))
-        return authors
-
-    def create_languages(self, value: str):
-        languages = []
-        for language in value.split(","):
-            languages.append(Language(language))
-        return languages
-
-    def create_cities(self, value: str):
-        cities = []
-
-        for city in value.split(","):
-            cities.append(city)
-        return cities if True else ''
-
-    def create_isbns(self, value: str):
-        isbns = []
-        for isbn in value.split(","):
-            isbns.append(ISBN(isbn))
-        return isbns
+    # def create_authors(self, value: str):
+    #     authors = []
+    #     for author in value.split(","):
+    #         authors.append(Author(author))
+    #     return authors
+    #
+    # def create_languages(self, value: str):
+    #     languages = []
+    #     for language in value.split(","):
+    #         languages.append(Language(language))
+    #     return languages
+    #
+    # def create_cities(self, value: str):
+    #     cities = []
+    #
+    #     for city in value.split(","):
+    #         cities.append(city)
+    #     return cities if True else ''
+    #
+    # def create_isbns(self, value: str):
+    #     isbns = []
+    #     for isbn in value.split(","):
+    #         isbns.append(ISBN(isbn))
+    #     return isbns
 
     def get_book_download_url(self, book_download_page_url):
         response = requests.get(book_download_page_url)
@@ -79,7 +74,7 @@ class LibgenScraper:
         return document.find('h2').a['href']
 
     def get_book_details(self, book_detail_url: str):
-        b = Book()
+        book = dict()
         response = requests.get(book_detail_url)
         document = BeautifulSoup(response.content, "html.parser")
         for detail in document.findAll('font', {"color": "gray"}):
@@ -87,94 +82,94 @@ class LibgenScraper:
             value = detail.next_element.next_element.text.strip()
             match field:
                 case 'Title':
-                    b.title = value
+                    book['title'] = value
                 case 'Volume':
-                    b.volume = value
+                    book['volume'] = value
                 case 'Author(s)':
-                    b.authors = self.create_authors(value)
+                    book['authors'] = value
                 case 'Series':
-                    b.series = value
+                    book['series'] = value
                 case 'Periodical':
-                    b.periodical = value
+                    book['periodical'] = value
                 case 'Publisher':
-                    b.publisher = value
+                    book['publisher'] = value
                 case 'City':
-                    b.city = self.create_cities(value) if len(value) > 1 else ''
+                    book['city'] = value
                 case 'Year':
-                    b.year = value
+                    book['year'] = value
                 case 'Edition':
-                    b.edition = value
+                    book['edition'] = value
                 case 'Language':
-                    b.language = self.create_languages(value)
+                    book['language'] = value
                 case 'Pages (biblio\\tech)':
-                    b.pages = value
+                    book['pages'] = value
                 case 'ISBN':
-                    b.isbn = self.create_isbns(value)
+                    book['isbn'] = value
                 case 'ID':
-                    b.id = value
+                    book['id'] = value
                 case 'Time added':
-                    b.time_added = value
+                    book['time_added'] = value
                 case 'Time modified':
-                    b.time_modified = value
+                    book['time_modified'] = value
                 case 'Library':
-                    b.library = value
+                    book['library'] = value
                 case 'Library issue':
-                    b.library_issue = value
+                    book['library_issue'] = value
                 case 'Size':
-                    b.size = value
+                    book['size'] = value
                 case 'Extension':
-                    b.extension = value
+                    book['extension'] = value
                 case 'Topic':
-                    b.topic = value
+                    book['topic'] = value
                 case 'Tags':
-                    b.tags = value
+                    book['tags'] = value
                 case 'ISSN':
-                    b.issn = value
+                    book['issn'] = value
                 case 'UDC':
-                    b.udc = value
+                    book['udc'] = value
                 case 'LBC':
-                    b.lbc = value
+                    book['lbc'] = value
                 case 'LCC':
-                    b.lcc = value
+                    book['lcc'] = value
                 case 'DDC':
-                    b.ddc = value
+                    book['ddc'] = value
                 case 'DOI':
-                    b.doi = value
+                    book['doi'] = value
                 case 'OpenLibrary ID':
-                    b.open_library_id = value
+                    book['open_library_id'] = value
                 case 'ID':
-                    b.id = value
+                    book['id'] = value
                 case 'Google Books':
-                    b.google_books = value
+                    book['google_books'] = value
                 case 'ASIN':
-                    b.asin = value
+                    book['asin'] = value
                 case 'DPI':
-                    b.dpi = value
+                    book['dpi'] = value
                 case 'OCR':
-                    b.ocr = value
+                    book['ocr'] = value
                 case 'Bookmarked':
-                    b.bookmarked = value
+                    book['bookmarked'] = value
                 case 'Scanned':
-                    b.scanned = value
+                    book['scanned'] = value
                 case 'Orientation':
-                    b.orientation = value
+                    book['orientation'] = value
                 case 'Paginated':
-                    b.paginated = value
+                    book['paginated'] = value
                 case 'Color':
-                    b.color = value
+                    book['color'] = value
                 case 'Clean':
-                    b.clean = value
-        b.image_url = urljoin(self.base_url, document.find('img')['src'])
-        b.file_url = self.get_book_download_url(document.find('td', {'rowspan': 22, 'width': 240}).a['href'])
-        print(b)
-
+                    book['clean'] = value
+        book['image_download_url'] = urljoin(self.base_url, document.find('img')['src'])
+        book['file_download_url'] = self.get_book_download_url(
+            document.find('td', {'rowspan': 22, 'width': 240}).a['href'])
+        return book
 
 # Example usage:
-if __name__ == "__main__":
-    libgen_scraper = LibgenScraper()
-    book_links = libgen_scraper.search_books("python mastery")
-    for book_link in book_links:
-        libgen_scraper.get_book_details(book_link)
-    print("Found book links:")
-    print(book_links)
-    print(len(book_links))
+# if __name__ == "__main__":
+#     libgen_scraper = LibgenScraper()
+#     book_links = libgen_scraper.search_books("python mastery")
+#     for book_link in book_links:
+#         libgen_scraper.get_book_details(book_link)
+#     print("Found book links:")
+#     print(book_links)
+#     print(len(book_links))
