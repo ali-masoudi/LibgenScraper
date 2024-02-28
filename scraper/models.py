@@ -1,4 +1,3 @@
-# Create your models here.
 from django.db import models
 
 
@@ -36,6 +35,7 @@ class Book(BaseModel):
     publisher = models.CharField(max_length=255, blank=True, null=True, verbose_name="Publisher")
     city = models.CharField(max_length=255, blank=True, null=True, verbose_name="City")
     year = models.CharField(max_length=255, blank=True, null=True, verbose_name="Year")
+    language = models.CharField(max_length=255, blank=True, null=True, verbose_name="Language")
     edition = models.CharField(max_length=255, blank=True, null=True, verbose_name="Edition")
     pages = models.CharField(max_length=255, blank=True, null=True, verbose_name="Pages")
     isbn = models.CharField(max_length=255, blank=True, null=True, verbose_name="ISBN")
@@ -80,6 +80,7 @@ class Book(BaseModel):
 
 class SearchResult(BaseModel):
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE, related_name='search_results')
+
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='search_results')
     modification_date = None
 
