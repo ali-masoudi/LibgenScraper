@@ -5,3 +5,6 @@ SECRET_KEY = ''
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# CELERY RABBIT MQ URL
+CELERY_BROKER_URL= 'amqp://user:pass@IP_ADDRESS'
